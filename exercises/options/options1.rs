@@ -4,7 +4,6 @@
 // This function returns how much icecream there is left in the fridge.
 // If it's before 10PM, there's 5 pieces left. At 10PM, someone eats them
 // all, so there'll be no more left :(
-// TODO: Return an Option!
 fn maybe_icecream(time_of_day: u16) -> Option<u16> {
     if time_of_day < 22 {
         Some(5)
@@ -30,7 +29,6 @@ mod tests {
 
     #[test]
     fn raw_value() {
-        // TODO: Fix this test. How do you get at the value contained in the Option?
         let icecreams = maybe_icecream(12);
         assert_eq!(icecreams, Some(5));
     }

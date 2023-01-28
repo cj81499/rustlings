@@ -23,25 +23,6 @@ struct Team {
     goals_conceded: u8,
 }
 
-fn update_score(
-    scores: &mut HashMap<String, Team>,
-    team_name: String,
-    score: u8,
-    opponent_score: u8,
-) {
-    scores
-        .entry(team_name.clone())
-        .and_modify(|t| {
-            t.goals_scored += score;
-            t.goals_conceded += opponent_score;
-        })
-        .or_insert(Team {
-            name: team_name,
-            goals_scored: score,
-            goals_conceded: opponent_score,
-        });
-}
-
 fn build_scores_table(results: String) -> HashMap<String, Team> {
     // The name of the team is the key and its associated struct is the value.
     let mut scores: HashMap<String, Team> = HashMap::new();
@@ -53,10 +34,24 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         let team_2_name = v[1].to_string();
         let team_2_score: u8 = v[3].parse().unwrap();
 
-        update_score(&mut scores, team_1_name, team_1_score, team_2_score);
-        update_score(&mut scores, team_2_name, team_2_score, team_1_score);
+        update_scores(&mut scores, team_1_name, team_1_score, team_2_score);
+        update_scores(&mut scores, team_2_name, team_2_score, team_1_score);
     }
     scores
+}
+
+fn update_scores(scores: &mut HashMap<String, Team>, name: String, scored: u8, conceded: u8) {
+    scores
+        .entry(name)
+        .and_modify(|t| {
+            t.goals_scored += scored;
+            t.goals_conceded += conceded;
+        })
+        .or_insert_with_key(|name| Team {
+            name: name.to_string(),
+            goals_scored: scored,
+            goals_conceded: conceded,
+        });
 }
 
 #[cfg(test)]
