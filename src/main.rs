@@ -165,7 +165,7 @@ fn main() {
                 let filter_cond = filters
                     .split(',')
                     .filter(|f| !f.trim().is_empty())
-                    .any(|f| e.name.contains(&f) || fname.contains(&f));
+                    .any(|f| e.name.contains(f) || fname.contains(f));
                 let status = if e.looks_done() {
                     exercises_done += 1;
                     "Done"
@@ -254,10 +254,7 @@ fn main() {
 
         Subcommands::Watch(_subargs) => match watch(&exercises, verbose) {
             Err(e) => {
-                println!(
-                    "Error: Could not watch your progress. Error message was {:?}.",
-                    e
-                );
+                println!("Error: Could not watch your progress. Error message was {e:?}.");
                 println!("Most likely you've run out of disk space or your 'inotify limit' has been reached.");
                 std::process::exit(1);
             }
@@ -403,7 +400,7 @@ fn watch(exercises: &[Exercise], verbose: bool) -> notify::Result<WatchStatus> {
 
 fn rustc_exists() -> bool {
     Command::new("rustc")
-        .args(&["--version"])
+        .args(["--version"])
         .stdout(Stdio::null())
         .spawn()
         .and_then(|mut child| child.wait())
